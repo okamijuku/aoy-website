@@ -5,6 +5,7 @@ import { FadeIn } from "./_components/FadeIn";
 import { DiningCarousel } from "./_components/DiningCarousel";
 import { RoomsSection } from "./_components/RoomsSection";
 import { AroundCarousel } from "./_components/AroundCarousel";
+import { ImageScrollBand } from "./_components/ImageScrollBand";
 import {
   getNewsList,
   getTop,
@@ -62,7 +63,7 @@ function ImageOverlayTitle({
       <div className="absolute inset-x-0 bottom-0 px-10 pb-14 md:px-16">
         <p
           style={{
-            fontSize: "0.7rem",
+            fontSize: "0.8125rem",
             letterSpacing: "0.25em",
             color: "#c9a97a",
             fontWeight: 300,
@@ -74,7 +75,7 @@ function ImageOverlayTitle({
         </p>
         <h2
           style={{
-            fontSize: "clamp(1.5rem, 3vw, 2rem)",
+            fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
             fontWeight: 400,
             color: "white",
             letterSpacing: "0.15em",
@@ -90,7 +91,7 @@ function ImageOverlayTitle({
       <div>
         <p
           style={{
-            fontSize: "0.7rem",
+            fontSize: "0.8125rem",
             letterSpacing: "0.25em",
             color: "#c9a97a",
             fontWeight: 300,
@@ -102,7 +103,7 @@ function ImageOverlayTitle({
         </p>
         <h2
           style={{
-            fontSize: "clamp(1.5rem, 3vw, 2rem)",
+            fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
             fontWeight: 400,
             color: "white",
             letterSpacing: "0.15em",
@@ -184,16 +185,25 @@ function OnsenSection({
               四季折々の自然が目の前に広がります。
             </p>
           )}
-          <dl className="mt-16 grid grid-cols-1 gap-y-10 md:grid-cols-3 md:gap-x-10">
+          <dl className="mt-16 grid grid-cols-1 gap-y-12 md:grid-cols-3 md:gap-x-12">
             {grid.map(({ term, desc }) => (
-              <div
-                key={term}
-                className="border-t border-[#d4c9b8] pt-6 text-center"
-              >
-                <dt className="mb-3 text-xs font-light tracking-[0.3em] text-[#8b6f47]">
+              <div key={term} className="text-center">
+                {/* 罫線＋ドット装飾 */}
+                <div className="mx-auto mb-6 flex items-center justify-center gap-3">
+                  <div className="h-px w-10 bg-[#d4c9b8]" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-[#c9a97a]" />
+                  <div className="h-px w-10 bg-[#d4c9b8]" />
+                </div>
+                <dt
+                  className="mb-3 font-light tracking-[0.25em] text-[#1a1a1a]"
+                  style={{ fontSize: "1.0625rem" }}
+                >
                   {term}
                 </dt>
-                <dd className="whitespace-pre-line text-sm font-light leading-relaxed tracking-wide text-[#666666]">
+                <dd
+                  className="whitespace-pre-line font-light leading-relaxed tracking-wide text-[#666666]"
+                  style={{ fontSize: "0.8125rem" }}
+                >
                   {desc}
                 </dd>
               </div>
@@ -719,6 +729,7 @@ export default async function Home() {
           imageUrl={top?.food?.image?.url}
           features={top?.food?.features}
         />
+        <ImageScrollBand images={top?.firstview?.images} />
         <RoomsSection rooms={top?.rooms ?? undefined} />
         <AccessSection
           heading={top?.access?.heading}

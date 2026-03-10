@@ -58,51 +58,73 @@ export function HeroSlider({
       {/* ── オーバーレイ ── */}
       <div className="absolute inset-0 bg-black/35" />
 
-      {/* ── キャッチコピー（中央） ── */}
+      {/* ── キャッチコピー + 施設名（中央） ── */}
       <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
-        <h1
-          className="font-light text-white"
-          style={{
-            fontFamily: "var(--font-serif-jp), 'Hiragino Mincho ProN', serif",
-            fontSize: "clamp(2rem, 5vw, 3rem)",
-            letterSpacing: "0.15em",
-            lineHeight: 1.9,
-            textShadow: "0 2px 20px rgba(0,0,0,0.3)",
-          }}
-        >
-          {catchcopy ?? (
-            <>
-              露天風呂からの眺望は
-              <br />
-              まさに絶景。
-            </>
-          )}
-        </h1>
+        <div>
+          <h1
+            className="font-light text-white"
+            style={{
+              fontFamily: "var(--font-serif-jp), 'Hiragino Mincho ProN', serif",
+              fontSize: "clamp(2rem, 6vw, 4rem)",
+              letterSpacing: "0.15em",
+              lineHeight: 1.3,
+              textShadow: "0 2px 20px rgba(0,0,0,0.3)",
+            }}
+          >
+            {catchcopy ?? (
+              <>
+                露天風呂からの眺望は
+                <br />
+                まさに絶景。
+              </>
+            )}
+          </h1>
+          {/* 施設名（キャッチコピー直下） */}
+          <p
+            className="font-light"
+            style={{
+              fontSize: "0.9375rem",
+              letterSpacing: "0.2em",
+              color: "rgba(255,255,255,0.85)",
+              marginTop: "1.75rem",
+            }}
+          >
+            会津芦ノ牧温泉 不動館 小谷の湯
+          </p>
+        </div>
       </div>
 
-      {/* ── 施設名（左下） ── */}
-      <div className="absolute bottom-10 left-8 z-10">
+      {/* ── 右側縦書きテキスト ── */}
+      <div className="absolute right-8 top-1/2 z-10 -translate-y-1/2">
         <p
-          className="text-white/50 font-light"
-          style={{ fontSize: "0.65rem", letterSpacing: "0.35em" }}
+          className="font-light"
+          style={{
+            fontSize: "0.75rem",
+            letterSpacing: "0.3em",
+            color: "rgba(255,255,255,0.5)",
+            writingMode: "vertical-rl",
+          }}
         >
-          会津芦ノ牧温泉 不動館 小谷の湯
+          美しい渓谷に佇む
         </p>
       </div>
 
-      {/* ── ドットインジケーター（下部中央） ── */}
+      {/* ── ラインインジケーター（NOIEスタイル・下部中央） ── */}
       {active.length > 1 && (
-        <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+        <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3">
           {active.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
               aria-label={`スライド ${i + 1}`}
-              className="h-1.5 rounded-full transition-all duration-500"
+              className="transition-all duration-500"
               style={{
-                width: i === current ? "2rem" : "0.375rem",
+                width: "2.5rem",
+                height: "1px",
                 backgroundColor:
-                  i === current ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.35)",
+                  i === current
+                    ? "rgba(255,255,255,1)"
+                    : "rgba(255,255,255,0.4)",
               }}
             />
           ))}
