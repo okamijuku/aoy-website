@@ -8,24 +8,58 @@
 body {
   font-family: var(--font-serif-jp);
   letter-spacing: 0.05em;
+  background-color: #faf8f5;
+  color: #1a1a1a;
 }
 
-/* リッチテキスト（microCMS） */
+/* ─── セクション見出し ─────────────────────────────────────────────── */
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.en-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: #8b6f47;
+  text-transform: uppercase;
+  font-weight: 300;
+  margin-bottom: 0.75rem;
+}
+
+.ja-heading {
+  font-size: 2rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  letter-spacing: 0.15em;
+}
+
+.section-heading-light .en-label {
+  color: #c9a97a;
+}
+
+.section-heading-light .ja-heading {
+  color: #ffffff;
+}
+
+/* ─── リッチテキスト（microCMS） ─────────────────────────────────── */
+
 .prose-news h2 {
   font-size: 1.125rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.1em;
-  color: #1c1814;
+  color: #1a1a1a;
   margin-top: 2.5rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e4ddd3;
+  border-bottom: 1px solid #d4c9b8;
 }
 .prose-news h3 {
   font-size: 1rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.08em;
-  color: #1c1814;
+  color: #1a1a1a;
   margin-top: 2rem;
   margin-bottom: 0.75rem;
 }
@@ -34,11 +68,11 @@ body {
   font-weight: 300;
   line-height: 2.6;
   letter-spacing: 0.08em;
-  color: #7a7068;
+  color: #666666;
   margin-bottom: 1.25rem;
 }
 .prose-news a {
-  color: #6b4c2a;
+  color: #8b6f47;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -52,7 +86,7 @@ body {
   font-weight: 300;
   line-height: 2.2;
   letter-spacing: 0.08em;
-  color: #7a7068;
+  color: #666666;
 }
 .prose-news img {
   max-width: 100%;
@@ -60,7 +94,8 @@ body {
   margin: 2rem auto;
 }
 
-/* FAQ アコーディオン */
+/* ─── FAQ アコーディオン ─────────────────────────────────────────── */
+
 details > summary {
   list-style: none;
 }

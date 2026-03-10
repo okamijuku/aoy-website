@@ -2,13 +2,14 @@ import Image from "next/image";
 import { Header } from "./_components/Header";
 import { HeroSlider } from "./_components/HeroSlider";
 import { FadeIn } from "./_components/FadeIn";
+import { DiningCarousel } from "./_components/DiningCarousel";
+import { RoomsSection } from "./_components/RoomsSection";
 import {
   getNewsList,
   getTop,
   type News,
   type TopFaq,
   type TopFeature,
-  type TopRoomsSection,
   type TopSightseeing,
 } from "@/libs/microcms";
 
@@ -24,26 +25,9 @@ function SectionTitle({
   light?: boolean;
 }) {
   return (
-    <div className="mb-14 text-center">
-      <p
-        className={`mb-3 text-[10px] font-light tracking-[0.6em] ${
-          light ? "text-[#8a7248]" : "text-[#6b4c2a]"
-        }`}
-      >
-        {en}
-      </p>
-      <h2
-        className={`text-2xl font-light tracking-[0.25em] ${
-          light ? "text-white" : "text-[#1c1814]"
-        }`}
-      >
-        {ja}
-      </h2>
-      <div
-        className={`mx-auto mt-5 h-px w-12 ${
-          light ? "bg-white/20" : "bg-[#cec4b4]"
-        }`}
-      />
+    <div className={`section-heading${light ? " section-heading-light" : ""}`}>
+      <p className="en-label">{en}</p>
+      <h2 className="ja-heading">{ja}</h2>
     </div>
   );
 }
@@ -52,7 +36,7 @@ function SectionTitle({
 function RichText({ html, className }: { html: string; className?: string }) {
   return (
     <div
-      className={`[&_p]:mb-4 [&_p:last-child]:mb-0 ${className ?? ""}`}
+      className={`[&_p]:mb-4 [&_p:last-child]:mb-0 [&_table]:w-full [&_td]:py-3 [&_td]:pr-6 [&_td]:text-sm [&_td]:font-light [&_td]:leading-relaxed [&_td]:tracking-wide ${className ?? ""}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
@@ -64,71 +48,7 @@ function formatDate(s: string) {
 }
 
 // ─── 01. ファーストビュー ───────────────────────────────────────────────────
-
-function FirstView({
-  catchcopy,
-  slides,
-}: {
-  catchcopy?: string;
-  slides?: { url: string; alt: string }[];
-}) {
-  return (
-    <section className="relative flex h-screen items-end overflow-hidden">
-      <HeroSlider slides={slides} />
-      <div className="absolute inset-0 bg-black/30" />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.15) 55%, transparent 100%)",
-        }}
-      />
-
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-8 pb-24 md:pb-36">
-        <p className="mb-8 text-[10px] font-light tracking-[0.5em] text-white/35">
-          AIZU ASHINOMAKI ONSEN / FUDOKAN OYANOYU
-        </p>
-        <h1 className="mb-6 text-4xl font-light leading-[1.9] tracking-[0.12em] text-white md:text-5xl lg:text-6xl">
-          {catchcopy ?? (
-            <>
-              露天風呂からの眺望は
-              <br />
-              まさに絶景。
-            </>
-          )}
-        </h1>
-        <p className="mb-10 text-sm font-light leading-loose tracking-[0.15em] text-white/55">
-          大川の渓谷美に癒されて。
-        </p>
-        <div className="mb-10 flex flex-wrap items-center gap-3 text-[11px] font-light tracking-[0.3em] text-white/35">
-          <span>源泉掛け流し100%</span>
-          <span className="text-white/15">|</span>
-          <span>全館和室</span>
-          <span className="text-white/15">|</span>
-          <span>会津の隠れ宿</span>
-        </div>
-        <a
-          href="https://oyanoyu.com/reservation.html"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block border border-white/40 px-9 py-3 text-xs font-light tracking-[0.3em] text-white transition-all hover:bg-white/10"
-        >
-          ご予約はこちら
-        </a>
-      </div>
-
-      <div className="absolute bottom-8 right-8 z-10 flex flex-col items-center gap-3">
-        <span
-          className="text-[9px] font-light tracking-[0.4em] text-white/25"
-          style={{ writingMode: "vertical-rl" }}
-        >
-          SCROLL
-        </span>
-        <div className="h-12 w-px bg-white/15" />
-      </div>
-    </section>
-  );
-}
+// HeroSlider が全要素（画像・オーバーレイ・キャッチコピー・ドット）を内包
 
 // ─── 02. 温泉・浴場 ────────────────────────────────────────────────────────
 
@@ -155,16 +75,16 @@ function OnsenSection({
       : ONSEN_FEATURES;
 
   return (
-    <section id="onsen" className="bg-[#f7f4ee] py-24 md:py-36">
+    <section id="onsen" className="bg-[#faf8f5] py-[60px] md:py-[80px]">
       <FadeIn className="mx-auto max-w-4xl px-6">
-        <SectionTitle en="ONSEN" ja={heading ?? "温泉・浴場"} />
+        <SectionTitle en="HOT SPRING" ja={heading ?? "温泉・浴場"} />
         {description ? (
           <RichText
             html={description}
-            className="text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#7a7068]"
+            className="text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]"
           />
         ) : (
-          <p className="text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#7a7068]">
+          <p className="text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]">
             会津芦ノ牧温泉の源泉を、加水・加温・循環なしの
             <br />
             源泉掛け流し100%でご提供しております。
@@ -176,11 +96,11 @@ function OnsenSection({
         )}
         <dl className="mt-14 grid grid-cols-1 gap-y-10 md:grid-cols-3 md:gap-x-8">
           {grid.map(({ term, desc }) => (
-            <div key={term} className="border-t border-[#cec4b4] pt-6 text-center">
-              <dt className="mb-3 text-xs font-light tracking-[0.3em] text-[#6b4c2a]">
+            <div key={term} className="border-t border-[#d4c9b8] pt-6 text-center">
+              <dt className="mb-3 text-xs font-light tracking-[0.3em] text-[#8b6f47]">
                 {term}
               </dt>
-              <dd className="whitespace-pre-line text-sm font-light leading-relaxed tracking-wide text-[#7a7068]">
+              <dd className="whitespace-pre-line text-sm font-light leading-relaxed tracking-wide text-[#666666]">
                 {desc}
               </dd>
             </div>
@@ -210,16 +130,16 @@ function HistorySection({
   description?: string;
 }) {
   return (
-    <section id="history" className="bg-[#eeeae2] py-24 md:py-36">
+    <section id="history" className="bg-[#f0ece5] py-[60px] md:py-[80px]">
       <FadeIn className="mx-auto max-w-3xl px-6">
         <SectionTitle en="HISTORY" ja={heading ?? "歴史"} />
         {description ? (
           <RichText
             html={description}
-            className="space-y-8 text-sm font-light leading-[2.8] tracking-[0.08em] text-[#7a7068]"
+            className="space-y-8 text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]"
           />
         ) : (
-          <div className="space-y-8 text-sm font-light leading-[2.8] tracking-[0.08em] text-[#7a7068]">
+          <div className="space-y-8 text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]">
             <p>
               会津芦ノ牧温泉は、会津若松市の南西、大川の峡谷に沿って湧く古湯です。
               その歴史は古く、約八百年前に開かれたとも伝わります。
@@ -242,13 +162,6 @@ function HistorySection({
 
 // ─── 04. お食事 ────────────────────────────────────────────────────────────
 
-const DINING_MENU = [
-  "こづゆ・にしんの山椒漬けなど、会津ならではの郷土料理",
-  "地元食材を活かした季節の懐石料理",
-  "地元の蔵元が醸す地酒（末廣・花春・会津中将など）",
-  "素朴な温かさが心に染みる、会津の朝食",
-];
-
 function DiningSection({
   heading,
   description,
@@ -261,60 +174,34 @@ function DiningSection({
   features?: TopFeature[];
 }) {
   return (
-    <section id="dining" className="bg-[#f7f4ee] py-24 md:py-36">
+    <section id="dining" className="bg-[#faf8f5] py-[60px] md:py-[80px]">
+      {/* メイン画像：セクション上部にフル幅で表示 */}
+      <div className="relative mb-14 w-full" style={{ height: "500px" }}>
+        <Image
+          src={imageUrl ?? "https://oyanoyu.com/img/1719383007505.webp"}
+          alt="会津の郷土料理"
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+      </div>
+
       <FadeIn className="mx-auto max-w-5xl px-6">
         <SectionTitle en="DINING" ja={heading ?? "お食事"} />
-        <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
-          <div className="relative aspect-[4/3] overflow-hidden">
-            <Image
-              src={imageUrl ?? "https://oyanoyu.com/img/1719383007505.webp"}
-              alt="会津の郷土料理"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
-          <div>
-            {description ? (
-              <RichText
-                html={description}
-                className="mb-10 text-sm font-light leading-[2.8] tracking-[0.08em] text-[#7a7068]"
-              />
-            ) : (
-              <p className="mb-10 text-sm font-light leading-[2.8] tracking-[0.08em] text-[#7a7068]">
-                会津の里が育む恵みを、丁寧な手仕事で食卓へ。
-                地元の旬の食材と、地元の蔵元が醸す地酒をお楽しみください。
-                心を込めた一椀が、旅の記憶に寄り添います。
-              </p>
-            )}
-            <ul className="space-y-5">
-              {features && features.length > 0
-                ? features.map((f, i) => (
-                    <li key={i} className="flex items-start gap-4">
-                      <span className="mt-[0.65em] h-px w-5 shrink-0 bg-[#6b4c2a]" />
-                      <span>
-                        <span className="block text-sm font-normal tracking-wide text-[#1c1814]">
-                          {f.label}
-                        </span>
-                        {f.text && (
-                          <span className="mt-1 block text-xs font-light leading-relaxed tracking-wide text-[#7a7068]">
-                            {f.text}
-                          </span>
-                        )}
-                      </span>
-                    </li>
-                  ))
-                : DINING_MENU.map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-start gap-4 text-sm font-light tracking-wide text-[#7a7068]"
-                    >
-                      <span className="mt-[0.65em] h-px w-5 shrink-0 bg-[#6b4c2a]" />
-                      {item}
-                    </li>
-                  ))}
-            </ul>
-          </div>
+        {description ? (
+          <RichText
+            html={description}
+            className="mb-12 text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]"
+          />
+        ) : (
+          <p className="mb-12 text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]">
+            会津の里が育む恵みを、丁寧な手仕事で食卓へ。
+            地元の旬の食材と、地元の蔵元が醸す地酒をお楽しみください。
+          </p>
+        )}
+        {/* カルーセル：左右 padding でモバイル時も矢印がはみ出ない余白を確保 */}
+        <div className="px-8 md:px-10">
+          <DiningCarousel features={features} />
         </div>
       </FadeIn>
     </section>
@@ -322,86 +209,7 @@ function DiningSection({
 }
 
 // ─── 05. 客室 ──────────────────────────────────────────────────────────────
-
-const ROOM_CARDS = [
-  {
-    name: "渓谷和室",
-    desc: "大川の渓谷を望む落ち着いた和室。\n季節の移ろいを間近に感じながら、\nゆっくりとお過ごしいただけます。",
-  },
-  {
-    name: "露天付き特別室",
-    desc: "客室に露天風呂を設えた特別室。\n源泉掛け流しの温泉を\n24時間お楽しみいただけます。",
-  },
-];
-
-function RoomsSection({ rooms }: { rooms?: TopRoomsSection }) {
-  const roomList = rooms?.room ?? [];
-
-  return (
-    <section id="rooms" className="bg-[#eeeae2] py-24 md:py-36">
-      <FadeIn className="mx-auto max-w-5xl px-6">
-        <SectionTitle en="ROOMS" ja={rooms?.heading ?? "客室"} />
-        {rooms?.description ? (
-          <p className="mb-14 text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#7a7068]">
-            {rooms.description}
-          </p>
-        ) : (
-          <p className="mb-14 text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#7a7068]">
-            全室、凛とした畳の和室。
-            窓を開ければ、大川の渓谷が目の前に広がります。
-          </p>
-        )}
-        {(rooms?.image ?? true) && (
-          <div className="relative mb-14 aspect-[16/9] overflow-hidden">
-            <Image
-              src={rooms?.image?.url ?? "https://oyanoyu.com/img/1719383236514.webp"}
-              alt="客室"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 1024px"
-            />
-          </div>
-        )}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          {roomList.length > 0
-            ? roomList.map((room, i) => (
-                <div key={i} className="overflow-hidden bg-[#f7f4ee]">
-                  {room.image && (
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      <Image
-                        src={room.image.url}
-                        alt={room.name}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                      />
-                    </div>
-                  )}
-                  <div className="p-7">
-                    <h3 className="mb-3 text-sm font-light tracking-[0.3em] text-[#1c1814]">
-                      {room.name}
-                    </h3>
-                    <p className="text-xs font-light leading-loose tracking-wide text-[#7a7068]">
-                      {room.description}
-                    </p>
-                  </div>
-                </div>
-              ))
-            : ROOM_CARDS.map(({ name, desc }) => (
-                <div key={name} className="border border-[#cec4b4] bg-[#f7f4ee] p-6">
-                  <h3 className="mb-3 text-sm font-light tracking-[0.3em] text-[#1c1814]">
-                    {name}
-                  </h3>
-                  <p className="whitespace-pre-line text-xs font-light leading-loose tracking-wide text-[#7a7068]">
-                    {desc}
-                  </p>
-                </div>
-              ))}
-        </div>
-      </FadeIn>
-    </section>
-  );
-}
+// RoomsSection は _components/RoomsSection.tsx（'use client'）に分離済み
 
 // ─── 06. アクセス ──────────────────────────────────────────────────────────
 
@@ -422,25 +230,25 @@ function AccessSection({
   mapUrl?: string;
 }) {
   return (
-    <section id="access" className="bg-[#f7f4ee] py-24 md:py-36">
+    <section id="access" className="bg-[#faf8f5] py-[60px] md:py-[80px]">
       <FadeIn className="mx-auto max-w-3xl px-6">
         <SectionTitle en="ACCESS" ja={heading ?? "アクセス"} />
         {accessHtml ? (
           <RichText
             html={accessHtml}
-            className="mb-12 text-sm font-light leading-[2.8] tracking-[0.08em] text-[#7a7068]"
+            className="mb-12 text-[#666666] [&_td:first-child]:w-28 [&_td:first-child]:text-xs [&_td:first-child]:tracking-[0.2em] [&_td:first-child]:text-[#8b6f47] [&_tr]:border-b [&_tr]:border-[#ddd4c4]"
           />
         ) : (
           <dl className="mb-12 space-y-0">
             {ACCESS_INFO.map(({ label, value }) => (
               <div
                 key={label}
-                className="flex flex-col gap-1 border-b border-[#e4ddd3] py-5 md:flex-row md:gap-12"
+                className="flex flex-col gap-1 border-b border-[#ddd4c4] py-5 md:flex-row md:gap-12"
               >
-                <dt className="w-28 shrink-0 text-xs font-light tracking-[0.2em] text-[#6b4c2a]">
+                <dt className="w-28 shrink-0 text-xs font-light tracking-[0.2em] text-[#8b6f47]">
                   {label}
                 </dt>
-                <dd className="text-sm font-light leading-relaxed tracking-wide text-[#7a7068]">
+                <dd className="text-sm font-light leading-relaxed tracking-wide text-[#666666]">
                   {value}
                 </dd>
               </div>
@@ -464,7 +272,7 @@ function AccessSection({
             href="https://maps.google.com/?q=会津芦ノ牧温泉+不動館+小谷の湯"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block border border-[#1c1814] px-9 py-3 text-xs font-light tracking-[0.3em] text-[#1c1814] transition-all hover:bg-[#1c1814] hover:text-[#f7f4ee]"
+            className="inline-block border border-[#1a1a1a] px-9 py-3 text-xs font-light tracking-[0.3em] text-[#1a1a1a] transition-all hover:bg-[#1a1a1a] hover:text-[#faf8f5]"
           >
             Google Mapsで開く →
           </a>
@@ -489,20 +297,20 @@ function AroundSection({ sightseeing }: { sightseeing?: TopSightseeing[] }) {
   const spots = sightseeing && sightseeing.length > 0 ? sightseeing : FALLBACK_SPOTS;
 
   return (
-    <section id="around" className="bg-[#eeeae2] py-24 md:py-36">
+    <section id="around" className="bg-[#f0ece5] py-[60px] md:py-[80px]">
       <FadeIn className="mx-auto max-w-4xl px-6">
-        <SectionTitle en="AROUND" ja="周辺観光" />
+        <SectionTitle en="SIGHTSEEING" ja="周辺観光" />
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {spots.map((spot) => (
-            <div key={spot.name} className="bg-[#f7f4ee] p-7">
-              <h3 className="mb-3 text-xs font-light tracking-[0.25em] text-[#1c1814]">
+            <div key={spot.name} className="bg-[#faf8f5] p-7">
+              <h3 className="mb-3 text-xs font-light tracking-[0.25em] text-[#1a1a1a]">
                 {spot.name}
               </h3>
-              <p className="text-xs font-light leading-loose tracking-wide text-[#7a7068]">
+              <p className="text-xs font-light leading-loose tracking-wide text-[#666666]">
                 {spot.description}
               </p>
               {spot.access && (
-                <p className="mt-2 text-[11px] font-light tracking-wide text-[#9a8e82]">
+                <p className="mt-2 text-[11px] font-light tracking-wide text-[#999999]">
                   {spot.access}
                 </p>
               )}
@@ -518,30 +326,30 @@ function AroundSection({ sightseeing }: { sightseeing?: TopSightseeing[] }) {
 
 function NewsSection({ newsList }: { newsList: News[] }) {
   return (
-    <section id="news" className="bg-[#f7f4ee] py-24 md:py-36">
+    <section id="news" className="bg-[#faf8f5] py-[60px] md:py-[80px]">
       <FadeIn className="mx-auto max-w-3xl px-6">
         <SectionTitle en="NEWS" ja="新着情報" />
         {newsList.length === 0 ? (
-          <p className="text-center text-sm font-light tracking-wider text-[#9a8e82]">
+          <p className="text-center text-sm font-light tracking-wider text-[#999999]">
             現在お知らせはありません
           </p>
         ) : (
           <ul>
             {newsList.map((news, i) => (
               <li key={news.id}>
-                {i === 0 && <div className="h-px bg-[#ddd5c8]" />}
+                {i === 0 && <div className="h-px bg-[#d4c9b8]" />}
                 <a
                   href={`/news/${news.id}`}
                   className="group flex items-baseline gap-8 py-6"
                 >
-                  <time className="w-28 shrink-0 text-xs font-light tracking-widest text-[#9a8e82]">
+                  <time className="w-28 shrink-0 text-xs font-light tracking-widest text-[#999999]">
                     {formatDate(news.publishedAt)}
                   </time>
-                  <span className="text-sm font-light leading-relaxed tracking-wide text-[#1c1814] transition-colors group-hover:text-[#6b4c2a]">
+                  <span className="text-sm font-light leading-relaxed tracking-wide text-[#1a1a1a] transition-colors group-hover:text-[#8b6f47]">
                     {news.title}
                   </span>
                 </a>
-                <div className="h-px bg-[#ddd5c8]" />
+                <div className="h-px bg-[#d4c9b8]" />
               </li>
             ))}
           </ul>
@@ -549,7 +357,7 @@ function NewsSection({ newsList }: { newsList: News[] }) {
         <div className="mt-10 text-right">
           <a
             href="/news"
-            className="text-xs font-light tracking-[0.3em] text-[#9a8e82] transition-colors hover:text-[#6b4c2a]"
+            className="text-xs font-light tracking-[0.3em] text-[#999999] transition-colors hover:text-[#8b6f47]"
           >
             一覧を見る →
           </a>
@@ -598,19 +406,19 @@ function FaqSection({ faq }: { faq?: TopFaq[] }) {
   const items = faq && faq.length > 0 ? faq : FALLBACK_FAQ;
 
   return (
-    <section id="faq" className="bg-[#eeeae2] py-24 md:py-36">
+    <section id="faq" className="bg-[#f0ece5] py-[60px] md:py-[80px]">
       <FadeIn className="mx-auto max-w-3xl px-6">
         <SectionTitle en="FAQ" ja="よくある質問" />
         <div>
           {items.map(({ question, answer }, i) => (
-            <details key={i} className="border-b border-[#cec4b4]">
-              <summary className="flex cursor-pointer items-center justify-between py-5 text-sm font-light tracking-wide text-[#1c1814]">
+            <details key={i} className="border-b border-[#d4c9b8]">
+              <summary className="flex cursor-pointer items-center justify-between py-5 text-sm font-light tracking-wide text-[#1a1a1a]">
                 <span className="pr-6">{question}</span>
-                <span className="faq-toggle shrink-0 text-xl font-light text-[#6b4c2a]">
+                <span className="faq-toggle shrink-0 text-xl font-light text-[#8b6f47]">
                   ＋
                 </span>
               </summary>
-              <div className="pb-6 text-sm font-light leading-loose tracking-wide text-[#7a7068]">
+              <div className="pb-6 text-sm font-light leading-loose tracking-wide text-[#666666]">
                 {answer}
               </div>
             </details>
@@ -631,7 +439,7 @@ function ContactSection({
   description?: string;
 }) {
   return (
-    <section id="contact" className="bg-[#1a1612] py-24 md:py-36">
+    <section id="contact" className="bg-[#1a1a1a] py-[60px] md:py-[80px]">
       <div className="mx-auto max-w-3xl px-6 text-center">
         <SectionTitle en="CONTACT" ja={heading ?? "お問い合わせ"} light />
         {description ? (
@@ -657,7 +465,7 @@ function ContactSection({
           href="https://oyanoyu.com/reservation.html"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block border border-white/40 px-12 py-4 text-xs font-light tracking-[0.3em] text-white transition-all hover:bg-white hover:text-[#1a1612]"
+          className="inline-block border border-white/40 px-12 py-4 text-xs font-light tracking-[0.3em] text-white transition-all hover:bg-white hover:text-[#1a1a1a]"
         >
           オンライン予約
         </a>
@@ -682,7 +490,7 @@ function Footer() {
   ];
 
   return (
-    <footer className="border-t border-white/5 bg-[#1a1612] pb-10 pt-16">
+    <footer className="border-t border-white/5 bg-[#1a1a1a] pb-10 pt-16">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-12 flex flex-col gap-10 md:flex-row md:justify-between">
           <div>
@@ -751,7 +559,6 @@ function Footer() {
 // ─── Page ──────────────────────────────────────────────────────────────────
 
 export default async function Home() {
-  // top API と news API を並行取得
   const [topResult, newsResult] = await Promise.allSettled([
     getTop(),
     getNewsList(3),
@@ -761,7 +568,6 @@ export default async function Home() {
   const newsList =
     newsResult.status === "fulfilled" ? newsResult.value.contents : [];
 
-  // firstview.images を HeroSlider 用に変換
   const heroSlides = top?.firstview?.images?.map((img) => ({
     url: img.url,
     alt: top.firstview.catchcopy ?? "会津芦ノ牧温泉 不動館 小谷の湯",
@@ -771,7 +577,7 @@ export default async function Home() {
     <>
       <Header />
       <main>
-        <FirstView
+        <HeroSlider
           catchcopy={top?.firstview?.catchcopy}
           slides={heroSlides}
         />

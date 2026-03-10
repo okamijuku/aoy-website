@@ -11,10 +11,16 @@ const FALLBACK_SLIDES: Slide[] = [
   { url: "https://oyanoyu.com/img/1719375489979.webp", alt: "露天風呂からの眺望" },
 ];
 
-const INTERVAL = 5000;
+const INTERVAL = 4000;
 const FADE_DURATION = 1200;
 
-export function HeroSlider({ slides }: { slides?: Slide[] }) {
+export function HeroSlider({
+  slides,
+  catchcopy,
+}: {
+  slides?: Slide[];
+  catchcopy?: string;
+}) {
   const active = slides && slides.length > 0 ? slides : FALLBACK_SLIDES;
   const [current, setCurrent] = useState(0);
 
@@ -27,7 +33,8 @@ export function HeroSlider({ slides }: { slides?: Slide[] }) {
   }, [active.length]);
 
   return (
-    <>
+    <section className="relative h-screen w-full overflow-hidden">
+      {/* ── スライド画像 ── */}
       {active.map((slide, i) => (
         <div
           key={slide.url}
@@ -47,6 +54,60 @@ export function HeroSlider({ slides }: { slides?: Slide[] }) {
           />
         </div>
       ))}
-    </>
+
+      {/* ── オーバーレイ ── */}
+      <div className="absolute inset-0 bg-black/35" />
+
+      {/* ── キャッチコピー（中央） ── */}
+      <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
+        <h1
+          className="font-light text-white"
+          style={{
+            fontFamily: "var(--font-serif-jp), 'Hiragino Mincho ProN', serif",
+            fontSize: "clamp(2rem, 5vw, 3rem)",
+            letterSpacing: "0.15em",
+            lineHeight: 1.9,
+            textShadow: "0 2px 20px rgba(0,0,0,0.3)",
+          }}
+        >
+          {catchcopy ?? (
+            <>
+              露天風呂からの眺望は
+              <br />
+              まさに絶景。
+            </>
+          )}
+        </h1>
+      </div>
+
+      {/* ── 施設名（左下） ── */}
+      <div className="absolute bottom-10 left-8 z-10">
+        <p
+          className="text-white/50 font-light"
+          style={{ fontSize: "0.65rem", letterSpacing: "0.35em" }}
+        >
+          会津芦ノ牧温泉 不動館 小谷の湯
+        </p>
+      </div>
+
+      {/* ── ドットインジケーター（下部中央） ── */}
+      {active.length > 1 && (
+        <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+          {active.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              aria-label={`スライド ${i + 1}`}
+              className="h-1.5 rounded-full transition-all duration-500"
+              style={{
+                width: i === current ? "2rem" : "0.375rem",
+                backgroundColor:
+                  i === current ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.35)",
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
