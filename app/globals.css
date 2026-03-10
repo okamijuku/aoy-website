@@ -7,6 +7,8 @@
 
 body {
   font-family: var(--font-serif-jp);
+  font-size: 17px;
+  line-height: 2.0;
   letter-spacing: 0.05em;
   background-color: #faf8f5;
   color: #1a1a1a;
@@ -20,7 +22,7 @@ body {
 }
 
 .en-label {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   letter-spacing: 0.2em;
   color: #8b6f47;
   text-transform: uppercase;
@@ -29,7 +31,7 @@ body {
 }
 
 .ja-heading {
-  font-size: 2rem;
+  font-size: 2.75rem;
   font-weight: 400;
   color: #1a1a1a;
   letter-spacing: 0.15em;

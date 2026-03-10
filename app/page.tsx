@@ -4,6 +4,7 @@ import { HeroSlider } from "./_components/HeroSlider";
 import { FadeIn } from "./_components/FadeIn";
 import { DiningCarousel } from "./_components/DiningCarousel";
 import { RoomsSection } from "./_components/RoomsSection";
+import { AroundCarousel } from "./_components/AroundCarousel";
 import {
   getNewsList,
   getTop,
@@ -140,7 +141,7 @@ function OnsenSection({
 
   return (
     <section id="onsen">
-      {/* フル幅ヒーロー画像 + オーバーレイタイトル */}
+      {/* フル幅ヒーロー画像 + 左下タイトル + グラデーションフェード */}
       <div className="relative overflow-hidden" style={{ height: "580px" }}>
         <Image
           src={imageUrl ?? "https://oyanoyu.com/img/1719383739993.webp"}
@@ -149,20 +150,31 @@ function OnsenSection({
           className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/45" />
-        <ImageOverlayTitle en="HOT SPRING" ja={heading ?? "温泉・浴場"} />
+        <div className="absolute inset-0 bg-black/40" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, transparent 60%, #faf8f5 100%)",
+          }}
+        />
+        <ImageOverlayTitle
+          en="HOT SPRING"
+          ja={heading ?? "温泉・浴場"}
+          align="bottom-left"
+        />
       </div>
 
-      {/* 説明文 + 特徴グリッド */}
-      <div className="bg-[#faf8f5] py-[80px] md:py-[100px]">
+      {/* 説明文 + 特徴グリッド（上余白なし・画像と連続） */}
+      <div className="bg-[#faf8f5] pb-[80px] pt-8 md:pb-[100px]">
         <FadeIn className="mx-auto max-w-4xl px-6">
           {description ? (
             <RichText
               html={description}
-              className="text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]"
+              className="text-center text-[1.0625rem] font-light leading-[2.0] tracking-[0.08em] text-[#666666]"
             />
           ) : (
-            <p className="text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]">
+            <p className="text-center text-[1.0625rem] font-light leading-[2.0] tracking-[0.08em] text-[#666666]">
               会津芦ノ牧温泉の源泉を、加水・加温・循環なしの
               <br />
               源泉掛け流し100%でご提供しております。
@@ -215,14 +227,17 @@ function HistorySection({
     : HISTORY_FALLBACK;
 
   return (
-    <section id="history" className="bg-[#f5f0e8] py-[80px] md:py-[100px]">
+    <section id="history" className="bg-[#f7f3ec] py-[80px] md:py-[100px]">
       <FadeIn className="mx-auto max-w-5xl px-6">
         <SectionTitle en="HISTORY" ja={heading ?? "歴史"} />
         <div className="flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
           {/* 画像 */}
           {imageUrl && (
             <div className="w-full md:w-1/2">
-              <div className="relative aspect-[4/3] overflow-hidden">
+              <div
+                className="relative overflow-hidden"
+                style={{ minHeight: "480px" }}
+              >
                 <Image
                   src={imageUrl}
                   alt={heading ?? "歴史"}
@@ -234,11 +249,12 @@ function HistorySection({
             </div>
           )}
           {/* テキスト */}
-          <div className={`w-full py-2 ${imageUrl ? "md:w-1/2" : ""}`}>
+          <div className={`w-full ${imageUrl ? "py-12 md:w-1/2" : "py-12"}`}>
             {paragraphs.map((para, i) => (
               <p
                 key={i}
-                className="mb-6 last:mb-0 text-base font-light leading-[2.0] tracking-[0.08em] text-[#444444]"
+                className="mb-6 last:mb-0 font-light leading-[2.0] tracking-[0.08em] text-[#444444]"
+                style={{ fontSize: "1.0625rem" }}
               >
                 {para}
               </p>
@@ -265,7 +281,7 @@ function DiningSection({
 }) {
   return (
     <section id="dining">
-      {/* フル幅ヒーロー画像 + 左下ラベルオーバーレイ */}
+      {/* フル幅ヒーロー画像 + 左下ラベルオーバーレイ + グラデーション */}
       <div className="relative overflow-hidden" style={{ height: "580px" }}>
         <Image
           src={imageUrl ?? "https://oyanoyu.com/img/1719383007505.webp"}
@@ -274,7 +290,14 @@ function DiningSection({
           className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/45" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, transparent 60%, #faf8f5 100%)",
+          }}
+        />
         <ImageOverlayTitle
           en="DINING"
           ja={heading ?? "お食事"}
@@ -282,8 +305,8 @@ function DiningSection({
         />
       </div>
 
-      {/* 説明文 + カルーセル */}
-      <div className="bg-[#faf8f5] py-[80px] md:py-[100px]">
+      {/* 説明文 + カルーセル（上余白なし・画像と連続） */}
+      <div className="bg-[#faf8f5] pb-[80px] pt-8 md:pb-[100px]">
         <FadeIn className="mx-auto max-w-5xl px-6">
           {description ? (
             <RichText
@@ -399,69 +422,13 @@ function AccessSection({
 
 // ─── 07. 周辺観光 ──────────────────────────────────────────────────────────
 
-const FALLBACK_SPOTS = [
-  {
-    name: "芦ノ牧温泉駅",
-    description:
-      "猫の駅長で有名な会津鉄道の駅。レトロな駅舎と周辺の散策が楽しめます。",
-    access: undefined,
-  },
-  {
-    name: "大川ライン遊覧",
-    description:
-      "大川の渓谷美を船上から楽しむ遊覧。四季折々の景色が眼前に広がります。",
-    access: undefined,
-  },
-  {
-    name: "鶴ヶ城（若松城）",
-    description:
-      "会津若松市内に立つ名城。幕末の歴史と美しい天守閣が見どころ。",
-    access: "車で約40分",
-  },
-  {
-    name: "飯盛山・白虎隊の史跡",
-    description:
-      "幕末の悲劇「白虎隊」ゆかりの地。会津の歴史と武士道精神を感じられます。",
-    access: undefined,
-  },
-  {
-    name: "七日町通り",
-    description:
-      "大正・昭和の面影を残す城下町の通り。古民家カフェや雑貨店が並びます。",
-    access: undefined,
-  },
-  {
-    name: "会津の酒蔵",
-    description:
-      "末廣酒造・花春酒造など、会津の地酒を醸す蔵元を見学できます。",
-    access: undefined,
-  },
-];
-
 function AroundSection({ sightseeing }: { sightseeing?: TopSightseeing[] }) {
-  const spots =
-    sightseeing && sightseeing.length > 0 ? sightseeing : FALLBACK_SPOTS;
-
   return (
     <section id="around" className="bg-[#f5f0e8] py-[80px] md:py-[100px]">
       <FadeIn className="mx-auto max-w-5xl px-6">
         <SectionTitle en="SIGHTSEEING" ja="周辺観光" />
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {spots.map((spot) => (
-            <div key={spot.name} className="bg-white p-8">
-              <h3 className="mb-3 text-xs font-light tracking-[0.3em] text-[#1a1a1a]">
-                {spot.name}
-              </h3>
-              <p className="text-sm font-light leading-loose tracking-wide text-[#666666]">
-                {spot.description}
-              </p>
-              {spot.access && (
-                <p className="mt-3 text-[11px] font-light tracking-wide text-[#999999]">
-                  {spot.access}
-                </p>
-              )}
-            </div>
-          ))}
+        <div className="px-8 md:px-10">
+          <AroundCarousel sightseeing={sightseeing} />
         </div>
       </FadeIn>
     </section>
