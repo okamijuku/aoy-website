@@ -34,10 +34,19 @@ function SectionTitle({
   );
 }
 
-function RichText({ html, className }: { html: string; className?: string }) {
+function RichText({
+  html,
+  className,
+  style,
+}: {
+  html: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
     <div
-      className={`[&_p]:mb-4 [&_p:last-child]:mb-0 [&_table]:w-full [&_td]:py-3 [&_td]:pr-6 [&_td]:text-sm [&_td]:font-light [&_td]:leading-relaxed [&_td]:tracking-wide ${className ?? ""}`}
+      className={`[&_p]:mb-4 [&_p:last-child]:mb-0 [&_table]:w-full [&_td]:py-3 [&_td]:pr-6 [&_td]:leading-relaxed ${className ?? ""}`}
+      style={style}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
@@ -48,69 +57,49 @@ function formatDate(s: string) {
   return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
 }
 
-// 画像の上にタイトルをオーバーレイするヘルパー
+// 画像ヒーローに重ねるタイトルオーバーレイ
 function ImageOverlayTitle({
   en,
   ja,
-  align = "center",
+  align = "bottom-left",
 }: {
   en: string;
   ja: string;
   align?: "center" | "bottom-left";
 }) {
+  const titleStyle: React.CSSProperties = {
+    fontSize: "var(--text-2xl)",
+    fontWeight: 400,
+    color: "white",
+    letterSpacing: "0.15em",
+    lineHeight: 1.3,
+  };
+  const labelStyle: React.CSSProperties = {
+    fontSize: "var(--text-xs)",
+    letterSpacing: "0.25em",
+    color: "var(--color-accent-light)",
+    fontWeight: 300,
+    marginBottom: "0.75rem",
+    textTransform: "uppercase",
+    display: "block",
+  };
+
   if (align === "bottom-left") {
     return (
-      <div className="absolute inset-x-0 bottom-0 px-10 pb-14 md:px-16">
-        <p
-          style={{
-            fontSize: "0.8125rem",
-            letterSpacing: "0.25em",
-            color: "#c9a97a",
-            fontWeight: 300,
-            marginBottom: "0.75rem",
-            textTransform: "uppercase",
-          }}
-        >
-          {en}
-        </p>
-        <h2
-          style={{
-            fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
-            fontWeight: 400,
-            color: "white",
-            letterSpacing: "0.15em",
-          }}
-        >
-          {ja}
-        </h2>
+      <div
+        className="absolute inset-x-0 bottom-0"
+        style={{ padding: "0 var(--container-padding) var(--space-lg)" }}
+      >
+        <span style={labelStyle}>{en}</span>
+        <h2 style={titleStyle}>{ja}</h2>
       </div>
     );
   }
   return (
     <div className="absolute inset-0 flex items-center justify-center text-center">
       <div>
-        <p
-          style={{
-            fontSize: "0.8125rem",
-            letterSpacing: "0.25em",
-            color: "#c9a97a",
-            fontWeight: 300,
-            marginBottom: "0.75rem",
-            textTransform: "uppercase",
-          }}
-        >
-          {en}
-        </p>
-        <h2
-          style={{
-            fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
-            fontWeight: 400,
-            color: "white",
-            letterSpacing: "0.15em",
-          }}
-        >
-          {ja}
-        </h2>
+        <span style={labelStyle}>{en}</span>
+        <h2 style={titleStyle}>{ja}</h2>
       </div>
     </div>
   );
@@ -156,26 +145,32 @@ function OnsenSection({
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, transparent 60%, #faf8f5 100%)",
+              "linear-gradient(to bottom, transparent 60%, var(--color-bg) 100%)",
           }}
         />
-        <ImageOverlayTitle
-          en="HOT SPRING"
-          ja={heading ?? "温泉・浴場"}
-          align="bottom-left"
-        />
+        <ImageOverlayTitle en="HOT SPRING" ja={heading ?? "温泉・浴場"} />
       </div>
 
-      {/* 説明文 + 特徴グリッド（上余白なし・画像と連続） */}
-      <div className="bg-[#faf8f5] pb-[80px] pt-8 md:pb-[100px]">
-        <FadeIn className="mx-auto max-w-4xl px-6">
+      {/* 説明文 + 特徴グリッド */}
+      <div
+        className="section"
+        style={{
+          background: "var(--color-bg)",
+          paddingTop: "var(--space-md)",
+        }}
+      >
+        <FadeIn className="container">
           {description ? (
             <RichText
               html={description}
-              className="text-center text-[1.0625rem] font-light leading-[2.0] tracking-[0.08em] text-[#666666]"
+              className="text-center font-light leading-loose"
+              style={{ color: "var(--color-text-muted)" } as React.CSSProperties}
             />
           ) : (
-            <p className="text-center text-[1.0625rem] font-light leading-[2.0] tracking-[0.08em] text-[#666666]">
+            <p
+              className="text-center font-light leading-loose"
+              style={{ color: "var(--color-text-muted)" }}
+            >
               会津芦ノ牧温泉の源泉を、加水・加温・循環なしの
               <br />
               源泉掛け流し100%でご提供しております。
@@ -185,24 +180,47 @@ function OnsenSection({
               四季折々の自然が目の前に広がります。
             </p>
           )}
-          <dl className="mt-16 grid grid-cols-1 gap-y-12 md:grid-cols-3 md:gap-x-12">
+
+          <dl
+            className="grid grid-cols-1 gap-y-12 md:grid-cols-3 md:gap-x-12"
+            style={{ marginTop: "var(--space-lg)" }}
+          >
             {grid.map(({ term, desc }) => (
               <div key={term} className="text-center">
                 {/* 罫線＋ドット装飾 */}
-                <div className="mx-auto mb-6 flex items-center justify-center gap-3">
-                  <div className="h-px w-10 bg-[#d4c9b8]" />
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#c9a97a]" />
-                  <div className="h-px w-10 bg-[#d4c9b8]" />
+                <div
+                  className="mx-auto flex items-center justify-center gap-3"
+                  style={{ marginBottom: "var(--space-sm)" }}
+                >
+                  <div
+                    className="h-px w-10"
+                    style={{ background: "var(--color-border)" }}
+                  />
+                  <div
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ background: "var(--color-accent-light)" }}
+                  />
+                  <div
+                    className="h-px w-10"
+                    style={{ background: "var(--color-border)" }}
+                  />
                 </div>
                 <dt
-                  className="mb-3 font-light tracking-[0.25em] text-[#1a1a1a]"
-                  style={{ fontSize: "1.0625rem" }}
+                  className="font-light tracking-[0.25em]"
+                  style={{
+                    fontSize: "var(--text-base)",
+                    color: "var(--color-text)",
+                    marginBottom: "0.5rem",
+                  }}
                 >
                   {term}
                 </dt>
                 <dd
-                  className="whitespace-pre-line font-light leading-relaxed tracking-wide text-[#666666]"
-                  style={{ fontSize: "0.8125rem" }}
+                  className="whitespace-pre-line font-light leading-relaxed tracking-wide"
+                  style={{
+                    fontSize: "var(--text-sm)",
+                    color: "var(--color-text-muted)",
+                  }}
                 >
                   {desc}
                 </dd>
@@ -237,8 +255,12 @@ function HistorySection({
     : HISTORY_FALLBACK;
 
   return (
-    <section id="history" className="bg-[#f7f3ec] py-[80px] md:py-[100px]">
-      <FadeIn className="mx-auto max-w-5xl px-6">
+    <section
+      id="history"
+      className="section"
+      style={{ background: "var(--color-bg-warm)" }}
+    >
+      <FadeIn className="container">
         <SectionTitle en="HISTORY" ja={heading ?? "歴史"} />
         <div className="flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
           {/* 画像 */}
@@ -259,12 +281,18 @@ function HistorySection({
             </div>
           )}
           {/* テキスト */}
-          <div className={`w-full ${imageUrl ? "py-12 md:w-1/2" : "py-12"}`}>
+          <div
+            className={`w-full ${imageUrl ? "md:w-1/2" : ""}`}
+            style={{ paddingBlock: "var(--space-md)" }}
+          >
             {paragraphs.map((para, i) => (
               <p
                 key={i}
-                className="mb-6 last:mb-0 font-light leading-[2.0] tracking-[0.08em] text-[#444444]"
-                style={{ fontSize: "1.0625rem" }}
+                className="font-light leading-loose tracking-[0.08em]"
+                style={{
+                  color: "#444444",
+                  marginBottom: "var(--space-sm)",
+                }}
               >
                 {para}
               </p>
@@ -305,26 +333,32 @@ function DiningSection({
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, transparent 60%, #faf8f5 100%)",
+              "linear-gradient(to bottom, transparent 60%, var(--color-bg) 100%)",
           }}
         />
-        <ImageOverlayTitle
-          en="DINING"
-          ja={heading ?? "お食事"}
-          align="bottom-left"
-        />
+        <ImageOverlayTitle en="DINING" ja={heading ?? "お食事"} />
       </div>
 
-      {/* 説明文 + カルーセル（上余白なし・画像と連続） */}
-      <div className="bg-[#faf8f5] pb-[80px] pt-8 md:pb-[100px]">
-        <FadeIn className="mx-auto max-w-5xl px-6">
+      {/* 説明文 + カルーセル */}
+      <div
+        className="section"
+        style={{
+          background: "var(--color-bg)",
+          paddingTop: "var(--space-md)",
+        }}
+      >
+        <FadeIn className="container">
           {description ? (
             <RichText
               html={description}
-              className="mb-12 text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]"
+              className="mb-12 text-center font-light leading-loose"
+              style={{ color: "var(--color-text-muted)" } as React.CSSProperties}
             />
           ) : (
-            <p className="mb-12 text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]">
+            <p
+              className="mb-12 text-center font-light leading-loose"
+              style={{ color: "var(--color-text-muted)" }}
+            >
               会津の里が育む恵みを、丁寧な手仕事で食卓へ。
               <br />
               地元の旬の食材と、地元の蔵元が醸す地酒をお楽しみください。
@@ -367,8 +401,12 @@ function AccessSection({
   mapUrl?: string;
 }) {
   return (
-    <section id="access" className="bg-[#faf8f5] py-[80px] md:py-[100px]">
-      <FadeIn className="mx-auto max-w-6xl px-6">
+    <section
+      id="access"
+      className="section"
+      style={{ background: "var(--color-bg)" }}
+    >
+      <FadeIn className="container">
         <SectionTitle en="ACCESS" ja={heading ?? "アクセス"} />
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:items-start">
           {/* 左：アクセス情報 */}
@@ -376,19 +414,38 @@ function AccessSection({
             {accessHtml ? (
               <RichText
                 html={accessHtml}
-                className="mb-8 text-[#666666] [&_td:first-child]:w-28 [&_td:first-child]:text-xs [&_td:first-child]:tracking-[0.2em] [&_td:first-child]:text-[#8b6f47] [&_tr]:border-b [&_tr]:border-[#ddd4c4]"
+                className="mb-8 [&_td:first-child]:w-28 [&_td:first-child]:tracking-[0.2em] [&_tr]:border-b"
+                style={
+                  {
+                    color: "var(--color-text-muted)",
+                    "--tw-border-opacity": 1,
+                  } as React.CSSProperties
+                }
               />
             ) : (
-              <dl className="mb-8 space-y-0">
+              <dl style={{ marginBottom: "var(--space-md)" }}>
                 {ACCESS_INFO.map(({ label, value }) => (
                   <div
                     key={label}
-                    className="flex flex-col gap-1 border-b border-[#ddd4c4] py-5 md:flex-row md:gap-12"
+                    className="flex flex-col gap-1 border-b py-5 md:flex-row md:gap-12"
+                    style={{ borderColor: "var(--color-border)" }}
                   >
-                    <dt className="w-28 shrink-0 text-xs font-light tracking-[0.2em] text-[#8b6f47]">
+                    <dt
+                      className="w-28 shrink-0 font-light tracking-[0.2em]"
+                      style={{
+                        fontSize: "var(--text-xs)",
+                        color: "var(--color-accent)",
+                      }}
+                    >
                       {label}
                     </dt>
-                    <dd className="text-sm font-light leading-relaxed tracking-wide text-[#666666]">
+                    <dd
+                      className="font-light leading-relaxed tracking-wide"
+                      style={{
+                        fontSize: "var(--text-sm)",
+                        color: "var(--color-text-muted)",
+                      }}
+                    >
                       {value}
                     </dd>
                   </div>
@@ -399,7 +456,13 @@ function AccessSection({
               href="https://maps.google.com/?q=会津芦ノ牧温泉+不動館+小谷の湯"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block border border-[#1a1a1a] px-9 py-3 text-xs font-light tracking-[0.3em] text-[#1a1a1a] transition-all hover:bg-[#1a1a1a] hover:text-[#faf8f5]"
+              className="inline-block border font-light tracking-[0.3em] transition-all hover:opacity-70"
+              style={{
+                fontSize: "var(--text-xs)",
+                color: "var(--color-text)",
+                borderColor: "var(--color-text)",
+                padding: "0.75rem 2rem",
+              }}
             >
               Google Mapsで開く →
             </a>
@@ -417,8 +480,17 @@ function AccessSection({
                 className="h-full w-full border-0"
               />
             ) : (
-              <div className="flex h-full items-center justify-center bg-[#e8e0d4]">
-                <p className="text-sm font-light tracking-wide text-[#999999]">
+              <div
+                className="flex h-full items-center justify-center"
+                style={{ background: "var(--color-border)" }}
+              >
+                <p
+                  className="font-light tracking-wide"
+                  style={{
+                    fontSize: "var(--text-sm)",
+                    color: "var(--color-text-muted)",
+                  }}
+                >
                   地図データなし
                 </p>
               </div>
@@ -434,8 +506,12 @@ function AccessSection({
 
 function AroundSection({ sightseeing }: { sightseeing?: TopSightseeing[] }) {
   return (
-    <section id="around" className="bg-[#f5f0e8] py-[80px] md:py-[100px]">
-      <FadeIn className="mx-auto max-w-5xl px-6">
+    <section
+      id="around"
+      className="section"
+      style={{ background: "var(--color-bg-warm)" }}
+    >
+      <FadeIn className="container">
         <SectionTitle en="SIGHTSEEING" ja="周辺観光" />
         <div className="px-8 md:px-10">
           <AroundCarousel sightseeing={sightseeing} />
@@ -449,38 +525,75 @@ function AroundSection({ sightseeing }: { sightseeing?: TopSightseeing[] }) {
 
 function NewsSection({ newsList }: { newsList: News[] }) {
   return (
-    <section id="news" className="bg-[#faf8f5] py-[80px] md:py-[100px]">
-      <FadeIn className="mx-auto max-w-3xl px-6">
+    <section
+      id="news"
+      className="section"
+      style={{ background: "var(--color-bg)" }}
+    >
+      <FadeIn className="container-narrow">
         <SectionTitle en="NEWS" ja="新着情報" />
         {newsList.length === 0 ? (
-          <p className="text-center text-sm font-light tracking-wider text-[#999999]">
+          <p
+            className="text-center font-light tracking-wider"
+            style={{
+              fontSize: "var(--text-sm)",
+              color: "var(--color-text-muted)",
+            }}
+          >
             現在お知らせはありません
           </p>
         ) : (
           <ul>
             {newsList.map((news, i) => (
               <li key={news.id}>
-                {i === 0 && <div className="h-px bg-[#d4c9b8]" />}
+                {i === 0 && (
+                  <div
+                    className="h-px"
+                    style={{ background: "var(--color-border)" }}
+                  />
+                )}
                 <a
                   href={`/news/${news.id}`}
                   className="group flex items-baseline gap-8 py-6"
                 >
-                  <time className="w-28 shrink-0 text-xs font-light tracking-widest text-[#999999]">
+                  <time
+                    className="w-28 shrink-0 font-light tracking-widest"
+                    style={{
+                      fontSize: "var(--text-xs)",
+                      color: "var(--color-text-muted)",
+                    }}
+                  >
                     {formatDate(news.publishedAt)}
                   </time>
-                  <span className="text-sm font-light leading-relaxed tracking-wide text-[#1a1a1a] transition-colors group-hover:text-[#8b6f47]">
+                  <span
+                    className="font-light leading-relaxed tracking-wide transition-colors"
+                    style={{
+                      fontSize: "var(--text-sm)",
+                      color: "var(--color-text)",
+                    }}
+                  >
                     {news.title}
                   </span>
                 </a>
-                <div className="h-px bg-[#d4c9b8]" />
+                <div
+                  className="h-px"
+                  style={{ background: "var(--color-border)" }}
+                />
               </li>
             ))}
           </ul>
         )}
-        <div className="mt-10 text-right">
+        <div
+          className="text-right"
+          style={{ marginTop: "var(--space-md)" }}
+        >
           <a
             href="/news"
-            className="text-xs font-light tracking-[0.3em] text-[#999999] transition-colors hover:text-[#8b6f47]"
+            className="font-light tracking-[0.3em] transition-colors hover:opacity-70"
+            style={{
+              fontSize: "var(--text-xs)",
+              color: "var(--color-text-muted)",
+            }}
           >
             一覧を見る →
           </a>
@@ -534,19 +647,42 @@ function FaqSection({ faq }: { faq?: TopFaq[] }) {
   const items = faq && faq.length > 0 ? faq : FALLBACK_FAQ;
 
   return (
-    <section id="faq" className="bg-[#2a2420] py-[80px] md:py-[100px]">
-      <FadeIn className="mx-auto max-w-3xl px-6">
+    <section
+      id="faq"
+      className="section"
+      style={{ background: "var(--color-bg-dark)" }}
+    >
+      <FadeIn className="container-narrow">
         <SectionTitle en="FAQ" ja="よくある質問" light />
         <div>
           {items.map(({ question, answer }, i) => (
-            <details key={i} className="border-b border-white/10">
-              <summary className="flex cursor-pointer items-center justify-between py-5 text-sm font-light tracking-wide text-white/80">
+            <details
+              key={i}
+              className="border-b"
+              style={{ borderColor: "rgba(255,255,255,0.1)" }}
+            >
+              <summary
+                className="flex cursor-pointer items-center justify-between py-5 font-light tracking-wide"
+                style={{
+                  fontSize: "var(--text-sm)",
+                  color: "rgba(255,255,255,0.8)",
+                }}
+              >
                 <span className="pr-6">{question}</span>
-                <span className="faq-toggle shrink-0 text-xl font-light text-[#c9a97a]">
+                <span
+                  className="faq-toggle shrink-0 text-xl font-light"
+                  style={{ color: "var(--color-accent-light)" }}
+                >
                   ＋
                 </span>
               </summary>
-              <div className="pb-6 text-sm font-light leading-loose tracking-wide text-white/50">
+              <div
+                className="pb-6 font-light leading-loose tracking-wide"
+                style={{
+                  fontSize: "var(--text-sm)",
+                  color: "rgba(255,255,255,0.5)",
+                }}
+              >
                 {answer}
               </div>
             </details>
@@ -567,33 +703,54 @@ function ContactSection({
   description?: string;
 }) {
   return (
-    <section id="contact" className="bg-[#1a1a1a] py-[80px] md:py-[100px]">
-      <div className="mx-auto max-w-3xl px-6 text-center">
+    <section
+      id="contact"
+      className="section"
+      style={{ background: "var(--color-bg-dark)" }}
+    >
+      <div className="container-narrow text-center">
         <SectionTitle en="CONTACT" ja={heading ?? "お問い合わせ"} light />
         {description ? (
           <RichText
             html={description}
-            className="mb-10 text-sm font-light leading-loose tracking-[0.1em] text-white/55"
+            className="mb-10 font-light leading-loose tracking-[0.1em]"
+            style={{ color: "rgba(255,255,255,0.55)" } as React.CSSProperties}
           />
         ) : (
-          <p className="mb-10 text-sm font-light leading-loose tracking-[0.1em] text-white/55">
+          <p
+            className="mb-10 font-light leading-loose tracking-[0.1em]"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
             ご予約・お問い合わせはお電話または予約フォームにて承っております。
           </p>
         )}
         <a
           href="tel:0242922311"
-          className="mb-3 block text-4xl font-light tracking-[0.15em] text-white transition-opacity hover:opacity-70"
+          className="mb-3 block font-light tracking-[0.15em] text-white transition-opacity hover:opacity-70"
+          style={{ fontSize: "var(--text-2xl)" }}
         >
           0242-92-2311
         </a>
-        <p className="mb-14 text-xs font-light tracking-[0.2em] text-white/35">
+        <p
+          className="font-light tracking-[0.2em]"
+          style={{
+            fontSize: "var(--text-xs)",
+            color: "rgba(255,255,255,0.35)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
           受付時間 AM8:00〜PM20:00
         </p>
         <a
           href="https://oyanoyu.com/reservation.html"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block border border-white/40 px-12 py-4 text-xs font-light tracking-[0.3em] text-white transition-all hover:bg-white hover:text-[#1a1a1a]"
+          className="inline-block border font-light tracking-[0.3em] text-white transition-all hover:bg-white"
+          style={{
+            fontSize: "var(--text-xs)",
+            borderColor: "rgba(255,255,255,0.4)",
+            padding: "1rem 3rem",
+          }}
         >
           オンライン予約
         </a>
@@ -618,42 +775,93 @@ function Footer() {
   ];
 
   return (
-    <footer className="border-t border-white/5 bg-[#1a1a1a] pb-10 pt-16">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="mb-12 flex flex-col gap-10 md:flex-row md:justify-between">
+    <footer
+      className="border-t"
+      style={{
+        background: "var(--color-bg-dark)",
+        borderColor: "rgba(255,255,255,0.05)",
+        paddingBlock: "var(--space-lg) var(--space-md)",
+      }}
+    >
+      <div className="container">
+        <div
+          className="flex flex-col gap-10 md:flex-row md:justify-between"
+          style={{ marginBottom: "var(--space-md)" }}
+        >
+          {/* ロゴ・住所 */}
           <div>
-            <p className="mb-1 text-[9px] font-light tracking-[0.3em] text-white/35">
+            <p
+              className="font-light tracking-[0.3em]"
+              style={{
+                fontSize: "var(--text-xs)",
+                color: "rgba(255,255,255,0.35)",
+                marginBottom: "0.25rem",
+              }}
+            >
               会津芦ノ牧温泉 不動館
             </p>
-            <p className="mb-5 text-base font-light tracking-[0.2em] text-white">
+            <p
+              className="font-light tracking-[0.2em] text-white"
+              style={{
+                fontSize: "var(--text-base)",
+                marginBottom: "var(--space-sm)",
+              }}
+            >
               小谷の湯
             </p>
-            <address className="not-italic text-xs font-light leading-relaxed tracking-wide text-white/35">
+            <address
+              className="not-italic font-light leading-relaxed tracking-wide"
+              style={{
+                fontSize: "var(--text-xs)",
+                color: "rgba(255,255,255,0.35)",
+              }}
+            >
               〒969-5146 福島県会津若松市
               <br />
               大戸町大字小谷字湯ノ平2498-2
               <br />
               <a
                 href="tel:0242922311"
-                className="transition-colors hover:text-white/60"
+                className="transition-colors hover:opacity-60"
               >
                 TEL: 0242-92-2311
               </a>
             </address>
           </div>
+
+          {/* ナビ */}
           <nav>
-            <ul className="grid grid-cols-2 gap-x-14 gap-y-3 text-xs font-light tracking-[0.2em] text-white/45">
+            <ul
+              className="grid grid-cols-2 gap-y-3 font-light tracking-[0.2em]"
+              style={{
+                gap: "0.75rem 3.5rem",
+                fontSize: "var(--text-xs)",
+                color: "rgba(255,255,255,0.45)",
+              }}
+            >
               {footerNav.map(({ href, label }) => (
                 <li key={href}>
-                  <a href={href} className="transition-colors hover:text-white">
+                  <a
+                    href={href}
+                    className="transition-colors hover:text-white"
+                  >
                     {label}
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
+
+          {/* SNS */}
           <div>
-            <p className="mb-5 text-[10px] font-light tracking-[0.4em] text-white/25">
+            <p
+              className="font-light tracking-[0.4em]"
+              style={{
+                fontSize: "var(--text-xs)",
+                color: "rgba(255,255,255,0.25)",
+                marginBottom: "var(--space-sm)",
+              }}
+            >
               FOLLOW US
             </p>
             <div className="flex flex-col gap-3">
@@ -661,7 +869,11 @@ function Footer() {
                 href="https://www.instagram.com/fudokan_oyanoyu/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-light tracking-[0.2em] text-white/45 transition-colors hover:text-white"
+                className="font-light tracking-[0.2em] transition-colors hover:text-white"
+                style={{
+                  fontSize: "var(--text-xs)",
+                  color: "rgba(255,255,255,0.45)",
+                }}
               >
                 Instagram
               </a>
@@ -669,15 +881,29 @@ function Footer() {
                 href="https://twitter.com/fudoukanoyanoyu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-light tracking-[0.2em] text-white/45 transition-colors hover:text-white"
+                className="font-light tracking-[0.2em] transition-colors hover:text-white"
+                style={{
+                  fontSize: "var(--text-xs)",
+                  color: "rgba(255,255,255,0.45)",
+                }}
               >
                 X (Twitter)
               </a>
             </div>
           </div>
         </div>
-        <div className="border-t border-white/5 pt-8 text-center">
-          <p className="text-[10px] font-light tracking-[0.3em] text-white/20">
+
+        <div
+          className="border-t pt-8 text-center"
+          style={{ borderColor: "rgba(255,255,255,0.05)" }}
+        >
+          <p
+            className="font-light tracking-[0.3em]"
+            style={{
+              fontSize: "var(--text-xs)",
+              color: "rgba(255,255,255,0.2)",
+            }}
+          >
             © {new Date().getFullYear()} 会津芦ノ牧温泉 不動館 小谷の湯. All
             Rights Reserved.
           </p>
