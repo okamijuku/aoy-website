@@ -1,26 +1,76 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif-jp: var(--font-noto-serif-jp), "Hiragino Mincho ProN",
+    "Yu Mincho", "游明朝", serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-serif-jp);
+  letter-spacing: 0.05em;
+}
+
+/* リッチテキスト（microCMS） */
+.prose-news h2 {
+  font-size: 1.125rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: #1c1814;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e4ddd3;
+}
+.prose-news h3 {
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: #1c1814;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.prose-news p {
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 2.6;
+  letter-spacing: 0.08em;
+  color: #7a7068;
+  margin-bottom: 1.25rem;
+}
+.prose-news a {
+  color: #6b4c2a;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-news ul,
+.prose-news ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+.prose-news li {
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 2.2;
+  letter-spacing: 0.08em;
+  color: #7a7068;
+}
+.prose-news img {
+  max-width: 100%;
+  height: auto;
+  margin: 2rem auto;
+}
+
+/* FAQ アコーディオン */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+.faq-toggle {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+details[open] .faq-toggle {
+  transform: rotate(45deg);
 }
