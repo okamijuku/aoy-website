@@ -97,7 +97,7 @@ export type TopContent = {
   hotspring: TopSection;
   food: TopSection;
   rooms: TopRoomsSection;
-  history: { heading: string; history: string };
+  history: { heading: string; history: string; image?: { url: string } };
   access: { heading: string; access: string; map_url?: string };
   contact?: { heading: string; description: string } | null;
   faq: TopFaq[];

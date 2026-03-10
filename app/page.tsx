@@ -122,39 +122,58 @@ function OnsenSection({
 
 // ─── 03. 歴史 ──────────────────────────────────────────────────────────────
 
+const HISTORY_FALLBACK = [
+  "会津芦ノ牧温泉は、会津若松市の南西、大川の峡谷に沿って湧く古湯です。その歴史は古く、約八百年前に開かれたとも伝わります。会津藩主の保護を受け、庶民と武士が共に癒しを求めた、由緒ある湯処です。",
+  "不動館 小谷の湯は、その会津芦ノ牧温泉の最奥に位置する、ひっそりとした一軒宿。俗世の喧騒から離れ、渓谷の自然と温泉だけに向き合う、まさに「会津の隠れ宿」として知られています。",
+  "長い年月を経ても変わらぬ湯の力と、代々受け継がれてきたもてなしの心。日常を忘れ、ただそこにある自然と向き合う時間を、どうぞお楽しみください。",
+];
+
 function HistorySection({
   heading,
   description,
+  imageUrl,
 }: {
   heading?: string;
   description?: string;
+  imageUrl?: string;
 }) {
+  // \n\n 区切りで段落に分割
+  const paragraphs = description
+    ? description.split(/\n\n+/).filter(Boolean)
+    : HISTORY_FALLBACK;
+
   return (
     <section id="history" className="bg-[#f0ece5] py-[60px] md:py-[80px]">
-      <FadeIn className="mx-auto max-w-3xl px-6">
+      <FadeIn className="mx-auto max-w-5xl px-6">
         <SectionTitle en="HISTORY" ja={heading ?? "歴史"} />
-        {description ? (
-          <RichText
-            html={description}
-            className="space-y-8 text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]"
-          />
-        ) : (
-          <div className="space-y-8 text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]">
-            <p>
-              会津芦ノ牧温泉は、会津若松市の南西、大川の峡谷に沿って湧く古湯です。
-              その歴史は古く、約八百年前に開かれたとも伝わります。
-              会津藩主の保護を受け、庶民と武士が共に癒しを求めた、由緒ある湯処です。
-            </p>
-            <p>
-              不動館 小谷の湯は、その会津芦ノ牧温泉の最奥に位置する、ひっそりとした一軒宿。
-              俗世の喧騒から離れ、渓谷の自然と温泉だけに向き合う、まさに「会津の隠れ宿」として知られています。
-            </p>
-            <p>
-              長い年月を経ても変わらぬ湯の力と、代々受け継がれてきたもてなしの心。
-              日常を忘れ、ただそこにある自然と向き合う時間を、どうぞお楽しみください。
-            </p>
+        {/* 2カラムレイアウト：モバイルは縦積み（画像上・テキスト下） */}
+        <div className="flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
+          {/* 画像（モバイルでは先に表示） */}
+          {imageUrl && (
+            <div className="w-full md:w-1/2">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-lg shadow-md">
+                <Image
+                  src={imageUrl}
+                  alt={heading ?? "歴史"}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
+            </div>
+          )}
+          {/* テキスト */}
+          <div className={`w-full py-2 ${imageUrl ? "md:w-1/2" : ""}`}>
+            {paragraphs.map((para, i) => (
+              <p
+                key={i}
+                className="mb-6 last:mb-0 text-base font-light leading-[1.9] tracking-[0.08em] text-[#444444]"
+              >
+                {para}
+              </p>
+            ))}
           </div>
-        )}
+        </div>
       </FadeIn>
     </section>
   );
@@ -590,6 +609,7 @@ export default async function Home() {
         <HistorySection
           heading={top?.history?.heading}
           description={top?.history?.history}
+          imageUrl={top?.history?.image?.url}
         />
         <DiningSection
           heading={top?.food?.heading}
