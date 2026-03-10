@@ -13,13 +13,11 @@ function RoomModal({
   room: TopRoom;
   onClose: () => void;
 }) {
-  // ESC キーで閉じる
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     document.addEventListener("keydown", handleKey);
-    // モーダル表示中はスクロールを止める
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", handleKey);
@@ -41,7 +39,7 @@ function RoomModal({
 
       {/* モーダル本体 */}
       <div
-        className="relative z-10 w-full max-w-[700px] overflow-hidden rounded-xl bg-white shadow-2xl"
+        className="relative z-10 w-full max-w-[700px] overflow-hidden bg-white shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-label={room.name}
@@ -105,71 +103,77 @@ export function RoomsSection({ rooms }: { rooms?: TopRoomsSection }) {
   const close = useCallback(() => setSelected(null), []);
 
   const roomList = rooms?.room ?? [];
+  const bgImage = rooms?.image?.url ?? FALLBACK_IMAGE;
 
   return (
-    <section id="rooms" className="bg-[#f0ece5] py-[60px] md:py-[80px]">
-      <div className="mx-auto max-w-5xl px-6">
-        {/* 見出し */}
-        <div className="section-heading">
-          <p className="en-label">ROOMS</p>
-          <h2 className="ja-heading">{rooms?.heading ?? "客室"}</h2>
-        </div>
+    <section
+      id="rooms"
+      className="relative"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundAttachment: "fixed",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* 暗いオーバーレイ */}
+      <div className="absolute inset-0 bg-black/65" />
 
-        {/* 説明文 */}
-        <p className="mb-14 text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-[#666666]">
-          {rooms?.description ?? "全室、凛とした畳の和室。窓を開ければ、大川の渓谷が目の前に広がります。"}
-        </p>
-
-        {/* セクションメイン画像 */}
-        <div className="relative mb-14 aspect-[16/9] overflow-hidden">
-          <Image
-            src={rooms?.image?.url ?? FALLBACK_IMAGE}
-            alt="客室"
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 1024px"
-          />
-        </div>
-
-        {/* 客室カードグリッド */}
-        {roomList.length > 0 ? (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {roomList.map((room, i) => (
-              <button
-                key={i}
-                onClick={() => setSelected(room)}
-                className="group w-full overflow-hidden bg-[#faf8f5] text-left transition-shadow hover:shadow-md"
-              >
-                {room.image && (
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image
-                      src={room.image.url}
-                      alt={room.name}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                  </div>
-                )}
-                <div className="p-7">
-                  <h3 className="mb-2 text-sm font-light tracking-[0.3em] text-[#1a1a1a]">
-                    {room.name}
-                  </h3>
-                  <p className="text-xs font-light leading-loose tracking-wide text-[#666666]">
-                    {room.description}
-                  </p>
-                  <p className="mt-4 text-[10px] font-light tracking-[0.3em] text-[#8b6f47]">
-                    詳細を見る →
-                  </p>
-                </div>
-              </button>
-            ))}
+      {/* コンテンツ */}
+      <div className="relative z-10 py-[80px] md:py-[100px]">
+        <div className="mx-auto max-w-5xl px-6">
+          {/* 見出し */}
+          <div className="section-heading section-heading-light">
+            <p className="en-label">ROOMS</p>
+            <h2 className="ja-heading">{rooms?.heading ?? "客室"}</h2>
           </div>
-        ) : (
-          <p className="text-center text-sm font-light tracking-wider text-[#999999]">
-            準備中
+
+          {/* 説明文 */}
+          <p className="mb-14 text-center text-sm font-light leading-[2.8] tracking-[0.08em] text-white/65">
+            {rooms?.description ??
+              "全室、凛とした畳の和室。窓を開ければ、大川の渓谷が目の前に広がります。"}
           </p>
-        )}
+
+          {/* 客室カードグリッド */}
+          {roomList.length > 0 ? (
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+              {roomList.map((room, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelected(room)}
+                  className="group w-full overflow-hidden border border-white/15 bg-white/10 text-left backdrop-blur-sm transition-all hover:bg-white/20"
+                >
+                  {room.image && (
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      <Image
+                        src={room.image.url}
+                        alt={room.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    </div>
+                  )}
+                  <div className="p-7">
+                    <h3 className="mb-2 text-sm font-light tracking-[0.3em] text-white">
+                      {room.name}
+                    </h3>
+                    <p className="text-xs font-light leading-loose tracking-wide text-white/60">
+                      {room.description}
+                    </p>
+                    <p className="mt-4 text-[10px] font-light tracking-[0.3em] text-[#c9a97a]">
+                      詳細を見る →
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-sm font-light tracking-wider text-white/40">
+              準備中
+            </p>
+          )}
+        </div>
       </div>
 
       {/* モーダル */}

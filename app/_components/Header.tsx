@@ -24,26 +24,43 @@ export function Header() {
   return (
     <header
       className={`fixed top-0 z-50 w-full transition-all duration-500 ${
-        scrolled ? "bg-[#1a1612]/95 backdrop-blur-sm" : "bg-transparent"
+        scrolled ? "bg-white shadow-sm" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         {/* ロゴ */}
         <a href="/" className="flex flex-col gap-0.5">
-          <span className="text-[9px] font-light tracking-[0.25em] text-white/50">
+          <span
+            className={`text-[9px] font-light tracking-[0.3em] transition-colors duration-500 ${
+              scrolled ? "text-[#999999]" : "text-white/50"
+            }`}
+          >
             会津芦ノ牧温泉 不動館
           </span>
-          <span className="text-sm font-light tracking-[0.2em] text-white">
+          <span
+            className={`text-sm font-light tracking-[0.25em] transition-colors duration-500 ${
+              scrolled ? "text-[#1a1a1a]" : "text-white"
+            }`}
+          >
             小谷の湯
           </span>
         </a>
 
         {/* ナビゲーション */}
         <nav className="hidden lg:block">
-          <ul className="flex items-center gap-6 text-[11px] font-light tracking-[0.2em] text-white/70">
+          <ul
+            className={`flex items-center gap-7 text-[11px] font-light tracking-[0.2em] transition-colors duration-500 ${
+              scrolled ? "text-[#666666]" : "text-white/70"
+            }`}
+          >
             {NAV.map(({ href, label }) => (
               <li key={href}>
-                <a href={href} className="transition-colors hover:text-white">
+                <a
+                  href={href}
+                  className={`transition-colors ${
+                    scrolled ? "hover:text-[#1a1a1a]" : "hover:text-white"
+                  }`}
+                >
                   {label}
                 </a>
               </li>
@@ -56,7 +73,11 @@ export function Header() {
           href="https://oyanoyu.com/reservation.html"
           target="_blank"
           rel="noopener noreferrer"
-          className="border border-white/50 px-5 py-2 text-[11px] font-light tracking-[0.2em] text-white transition-all hover:bg-white hover:text-[#1a1612]"
+          className={`px-5 py-2 text-[11px] font-light tracking-[0.2em] transition-all ${
+            scrolled
+              ? "border border-[#1a1a1a] text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white"
+              : "border border-white/50 text-white hover:bg-white hover:text-[#1a1612]"
+          }`}
         >
           ご予約
         </a>
